@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Top Tracks - Spotify Stats</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-12">
+                <a href="index.html" class="btn btn-outline-success mb-4">← Back</a>
+                <h1 class="text-center mb-4">Your Top Tracks</h1>
+                <div id="tracks-container"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const tracksContainer = document.getElementById('tracks-container');
+
+            async function displayTracks() {
+                try {
+                    const data = await makeSpotifyRequest('/me/top/tracks?limit=50&time_range=short_term');
+                    tracksContainer.innerHTML = data.items.map((track, index) => `
+                        <div class="track-item p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="track-number me-3">${index + 1}</span>
+                                <img src="${track.album.images[2].url}" alt="${track.name}" width="64" height="64" class="me-3">
+                                <div>
+                                    <h5 class="mb-0">${track.name}</h5>
+                                    <p class="text-muted mb-0">${track.artists.map(artist => artist.name).join(', ')}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (error) {
+                    console.error('Error fetching tracks:', error);
+                    window.location.href = 'index.html';
+                }
+            }
+
+            displayTracks();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+body {
+    background-color: #121212;
+    color: white;
+    padding-bottom: 2rem;
+    /* Add subtle gradient to background */
+    background: linear-gradient(
+        45deg, 
+        #121212, 
+        #1a1a1a,
+        #242424,
+        #1a1a1a,
+        #121212
+    );
+    background-size: 400% 400%;
+    animation: rotateGradient 15s ease infinite;
+}
+
+.btn-success {
+    background-color: #1DB954;
+    border-color: #1DB954;
+    box-shadow: 0 0 15px rgba(29, 185, 84, 0.3);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-success {
+    color: #1DB954;
+    border-color: #1DB954;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-success:hover {
+    background-color: #1DB954;
+    border-color: #1DB954;
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
+    transform: translateY(-2px);
+}
+
+#user-profile {
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.profile-image {
+    object-fit: cover;
+    box-shadow: 0 0 25px rgba(29, 185, 84, 0.4);
+}
+
+.track-item {
+    background: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.track-item:hover {
+    background: rgba(56, 56, 56, 0.8);
+    transform: translateX(5px) translateY(-2px) rotateY(5deg);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(29, 185, 84, 0.2);
+}
+
+.track-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    animation: shimmer 3s infinite;
+}
+
+.track-number {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #1DB954;
+    min-width: 30px;
+}
+
+.artist-card {
+    background: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    height: 100%;
+    animation: float 6s ease-in-out infinite;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.artist-card:hover {
+    transform: translateY(-10px) scale(1.02) rotateY(-5deg);
+    box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(29, 185, 84, 0.3);
+    animation: tilt 5s infinite ease-in-out;
+}
+
+.artist-number {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #1DB954;
+}
+
+.genre-item {
+    background: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.genre-item:hover {
+    transform: translateX(3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 15px rgba(29, 185, 84, 0.2);
+}
+
+.genre-item .progress {
+    height: 10px;
+    background-color: rgba(64, 64, 64, 0.5);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.genre-item .progress-bar {
+    background: linear-gradient(
+        90deg,
+        #1DB954,
+        #1ed760,
+        #1DB954
+    );
+    background-size: 200% auto;
+    animation: rotateGradient 3s linear infinite;
+    box-shadow: 0 0 10px rgba(29, 185, 84, 0.4);
+    transition: width 0.6s ease;
+}
+
+.genre-name {
+    text-transform: capitalize;
+}
+
+.btn-group .btn {
+    border-radius: 20px;
+    margin: 0 5px;
+}
+
+.btn-group .btn.active {
+    background-color: #1DB954;
+    color: white;
+}
+
+.container {
+    max-width: 1200px;
+    padding: 0 1rem;
+}
+
+h1 {
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #1DB954;
+    text-shadow: 0 0 15px rgba(29, 185, 84, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #1DB954, transparent);
+    transform: translateX(-100%);
+    animation: shimmer 3s infinite;
+}
+
+.text-muted {
+    color: #b3b3b3 !important;
+}
+
+/* Index page specific styles */
+.display-4 {
+    font-weight: 700;
+    letter-spacing: -1px;
+    background: linear-gradient(45deg, #1DB954, #1ed760);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+}
+
+#login-button, #logout-button {
+    font-weight: 600;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    padding: 12px 30px;
+}
+
+#login-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(29, 185, 84, 0.4);
+}
+
+#logout-button:hover {
+    transform: scale(1.05);
+}
+
+#user-profile {
+    background-color: #282828;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+#user-profile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.profile-image {
+    border: 4px solid #1DB954;
+    transition: all 0.3s ease;
+    animation: float 6s ease-in-out infinite;
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+}
+
+.gap-3 {
+    gap: 1rem !important;
+}
+
+/* Glass morphism effect for containers */
+.glass-container {
+    background: rgba(40, 40, 40, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+}
+
+/* Animated hover effects for interactive elements */
+.interactive-hover {
+    transition: all 0.3s ease;
+}
+
+.interactive-hover:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(40, 40, 40, 0.7);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1DB954;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1ed760;
+}
+
+/* Add these new animation keyframes at the end of the file */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px rgba(29, 185, 84, 0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(29, 185, 84, 0.5); }
+    100% { transform: scale(1); box-shadow: 0 0 20px rgba(29, 185, 84, 0.3); }
+}
+
+@keyframes rotateGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+/* Now Playing page specific animations */
+#song-image {
+    border-radius: 10px;
+    animation: float 6s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(29, 185, 84, 0.3);
+    transition: all 0.3s ease;
+}
+
+#song-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(29, 185, 84, 0.5);
+}
+
+.media-controls button {
+    transition: all 0.3s ease;
+}
+
+.media-controls button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
+}
+
+#play-pause-button {
+    animation: pulse 2s infinite;
+}
+
+/* Login button animation */
+#login-button {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+        90deg,
+        #1DB954,
+        #1ed760,
+        #1DB954
+    );
+    background-size: 200% auto;
+    animation: rotateGradient 3s linear infinite;
+}
+
+#login-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.2) 0%,
+        transparent 50%
+    );
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#login-button:hover::after {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Progress bar animation for Now Playing */
+.progress {
+    overflow: visible !important;
+}
+
+.progress-bar {
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background: #1DB954;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #1DB954;
+}
+
+/* Device badge animation */
+.badge {
+    animation: pulse 2s infinite;
+}
+
+/* Add smooth transitions for all elements */
+* {
+    transition: all 0.3s ease;
+}
+
+/* Hover effects for interactive elements */
+.btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(29, 185, 84, 0.3);
+}
+
+/* Add glass morphism effect to all cards */
+.track-item,
+.artist-card,
+.genre-item,
+#user-profile,
+#current-song {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(40, 40, 40, 0.7);
+}
+
+/* Add neon glow effect to important elements */
+.btn-success,
+#play-pause-button,
+.profile-image {
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+}
+
+.btn-success:hover,
+#play-pause-button:hover,
+.profile-image:hover {
+    box-shadow: 0 0 30px rgba(29, 185, 84, 0.5);
+}
+
+/* Add music visualizer effect */
+.visualizer {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 20px 0;
+}
+
+.visualizer-bar {
+    width: 4px;
+    height: 20px;
+    background: #1DB954;
+    border-radius: 2px;
+    animation: visualize 0.8s infinite ease;
+}
+
+@keyframes visualize {
+    0%, 100% { height: 20px; }
+    50% { height: 40px; }
+}
+
+/* Add rainbow gradient text effect */
+.rainbow-text {
+    background: linear-gradient(
+        to right,
+        #1DB954,
+        #00ff00,
+        #1ed760,
+        #1DB954
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: rainbow 4s linear infinite;
+}
+
+@keyframes rainbow {
+    to { background-position: 200% center; }
+}
+
+/* Add ripple effect for buttons */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform .5s, opacity 1s;
+}
+
+.btn:active::after {
+    transform: scale(0, 0);
+    opacity: .3;
+    transition: 0s;
+}
+
+/* Add tilt effect for cards */
+@keyframes tilt {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    75% { transform: rotate(-1deg); }
+}
+
+.artist-card:hover {
+    animation: tilt 5s infinite ease-in-out;
+}
