@@ -57,35 +57,39 @@ function StatCard({ title, value }: { title: string; value: string | number }) {
   );
 }
 
-function TrackList({ tracks, title }: { tracks: any[]; title: string }) {
+function TrackList({ tracks, title, listType }: { tracks: any[]; title: string; listType: string }) {
   return (
     <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6">
       <h2 className="text-xl font-bold mb-4">{title}</h2>
       <div className="space-y-4">
-        {tracks.map((track: any, index: number) => (
-          <a
-            key={track.id || track.played_at}
-            href={track.external_urls.spotify}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
-          >
-            <span className="text-gray-400 w-6 text-sm">{index + 1}</span>
-            <Image
-              src={track.album.images[0].url}
-              alt={track.name}
-              width={40}
-              height={40}
-              className="rounded"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="font-medium truncate">{track.name}</p>
-              <p className="text-sm text-gray-400 truncate">
-                {track.artists.map((artist: any) => artist.name).join(', ')}
-              </p>
-            </div>
-          </a>
-        ))}
+        {tracks.map((track: any, index: number) => {
+          const uniqueKey = `${listType}-${track.id || track.played_at}-${index}`;
+          
+          return (
+            <a
+              key={uniqueKey}
+              href={track.external_urls.spotify}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              <span className="text-gray-400 w-6 text-sm">{index + 1}</span>
+              <Image
+                src={track.album.images[0].url}
+                alt={track.name}
+                width={40}
+                height={40}
+                className="rounded"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-medium truncate">{track.name}</p>
+                <p className="text-sm text-gray-400 truncate">
+                  {track.artists.map((artist: any) => artist.name).join(', ')}
+                </p>
+              </div>
+            </a>
+          );
+        })}
       </div>
     </div>
   );
@@ -134,7 +138,7 @@ export default async function Dashboard() {
   } = await getData();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-[#1DB954]/10 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-[#1DB954]/5 to-black">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Profile Section */}
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-12">
@@ -168,15 +172,18 @@ export default async function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TrackList 
             tracks={topTracks.items} 
-            title="Top Tracks (Last 4 Weeks)" 
+            title="Top Tracks (Last 4 Weeks)"
+            listType="recent-top"
           />
           <TrackList 
             tracks={topTracksAllTime.items} 
-            title="Top Tracks (All Time)" 
+            title="Top Tracks (All Time)"
+            listType="all-time-top"
           />
           <TrackList 
             tracks={recentlyPlayed.items.map((item: any) => item.track)} 
-            title="Recently Played" 
+            title="Recently Played"
+            listType="recently-played"
           />
           <div className="space-y-6">
             <ArtistGrid 
