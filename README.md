@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spotify API Dashboard
 
-## Getting Started
+A modern web application built with Next.js that integrates with the Spotify API to provide a dashboard interface for managing and viewing Spotify data.
 
-First, run the development server:
+## Features
 
+- Spotify OAuth2 Authentication
+- Modern and responsive dashboard interface
+- Built with Next.js 15 and TypeScript
+- Docker support for easy deployment
+- Tailwind CSS for styling
+
+## Prerequisites
+
+- Node.js (Latest LTS version recommended)
+- npm or yarn
+- Docker and Docker Compose (optional, for containerized deployment)
+- Spotify Developer Account and API credentials
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REDIRECT_URI=your_redirect_uri
+```
+
+You can obtain these credentials by creating an application in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/spotify-api.git
+cd spotify-api
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Docker Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To run the application using Docker:
 
-## Learn More
+1. Build and start the containers:
+```bash
+docker-compose up -d
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. The application will be available at `http://localhost:3000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+spotify-api/
+├── src/
+│   ├── app/              # Next.js app directory
+│   ├── types/            # TypeScript type definitions
+│   └── utils/            # Utility functions
+├── public/               # Static assets
+├── Dockerfile           # Docker configuration
+├── docker-compose.yml   # Docker Compose configuration
+└── ...
+```
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [Next.js](https://nextjs.org/) - React framework for production
+- [TypeScript](https://www.typescriptlang.org/) - Static typing for JavaScript
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Docker](https://www.docker.com/) - Containerization platform
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
