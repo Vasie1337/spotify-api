@@ -10,8 +10,16 @@ import {
   getUserPlaylists
 } from '@/utils/spotify';
 import { redirect } from 'next/navigation';
+import type { 
+  SpotifyTrack, 
+  SpotifyArtist, 
+  SpotifyProfile, 
+  SpotifyResponse,
+  RecentlyPlayedTrack,
+  SpotifyPlaylist
+} from '@/types/spotify';
 
-async function getData() {
+async function getData(): Promise<DashboardData> {
   const cookieStore = await cookies();
   const access_token = cookieStore.get('spotify_access_token');
 
@@ -57,13 +65,20 @@ function StatCard({ title, value }: { title: string; value: string | number }) {
   );
 }
 
-function TrackList({ tracks, title, listType }: { tracks: any[]; title: string; listType: string }) {
+interface TrackListProps {
+  tracks: (SpotifyTrack | RecentlyPlayedTrack)[];
+  title: string;
+  listType: string;
+}
+
+function TrackList({ tracks, title, listType }: TrackListProps) {
   return (
     <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6">
       <h2 className="text-xl font-bold mb-4">{title}</h2>
       <div className="space-y-4">
-        {tracks.map((track: any, index: number) => {
-          const uniqueKey = `${listType}-${track.id || track.played_at}-${index}`;
+        {tracks.map((item, index) => {
+          const track = 'track' in item ? item.track : item;
+          const uniqueKey = `${listType}-${track.id}-${index}`;
           
           return (
             <a
@@ -84,7 +99,7 @@ function TrackList({ tracks, title, listType }: { tracks: any[]; title: string; 
               <div className="min-w-0 flex-1">
                 <p className="font-medium truncate">{track.name}</p>
                 <p className="text-sm text-gray-400 truncate">
-                  {track.artists.map((artist: any) => artist.name).join(', ')}
+                  {track.artists.map(artist => artist.name).join(', ')}
                 </p>
               </div>
             </a>
@@ -95,12 +110,17 @@ function TrackList({ tracks, title, listType }: { tracks: any[]; title: string; 
   );
 }
 
-function ArtistGrid({ artists, title }: { artists: any[]; title: string }) {
+interface ArtistGridProps {
+  artists: SpotifyArtist[];
+  title: string;
+}
+
+function ArtistGrid({ artists, title }: ArtistGridProps) {
   return (
     <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6">
       <h2 className="text-xl font-bold mb-4">{title}</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        {artists.map((artist: any) => (
+        {artists.map((artist) => (
           <a
             key={artist.id}
             href={artist.external_urls.spotify}
@@ -124,6 +144,16 @@ function ArtistGrid({ artists, title }: { artists: any[]; title: string }) {
       </div>
     </div>
   );
+}
+
+interface DashboardData {
+  profile: SpotifyProfile;
+  topTracks: SpotifyResponse<SpotifyTrack>;
+  topArtists: SpotifyResponse<SpotifyArtist>;
+  recentlyPlayed: SpotifyResponse<RecentlyPlayedTrack>;
+  topTracksAllTime: SpotifyResponse<SpotifyTrack>;
+  topArtistsAllTime: SpotifyResponse<SpotifyArtist>;
+  playlists: SpotifyResponse<SpotifyPlaylist>;
 }
 
 export default async function Dashboard() {
@@ -181,7 +211,7 @@ export default async function Dashboard() {
             listType="all-time-top"
           />
           <TrackList 
-            tracks={recentlyPlayed.items.map((item: any) => item.track)} 
+            tracks={recentlyPlayed.items} 
             title="Recently Played"
             listType="recently-played"
           />
