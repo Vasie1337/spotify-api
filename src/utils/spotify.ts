@@ -57,4 +57,52 @@ export async function getTopArtists(access_token: string) {
   );
   
   return response.json();
+}
+
+export async function getRecentlyPlayed(access_token: string) {
+  const response = await fetch(
+    `${SPOTIFY_API_BASE}/me/player/recently-played?limit=10`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return response.json();
+}
+
+export async function getTopTracksAllTime(access_token: string) {
+  const response = await fetch(
+    `${SPOTIFY_API_BASE}/me/top/tracks?limit=10&time_range=long_term`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return response.json();
+}
+
+export async function getTopArtistsAllTime(access_token: string) {
+  const response = await fetch(
+    `${SPOTIFY_API_BASE}/me/top/artists?limit=10&time_range=long_term`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return response.json();
+}
+
+export async function getUserPlaylists(access_token: string) {
+  const response = await fetch(
+    `${SPOTIFY_API_BASE}/me/playlists?limit=10`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return response.json();
 } 

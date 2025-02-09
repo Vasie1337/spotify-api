@@ -4,7 +4,7 @@ const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
-const scope = 'user-read-private user-read-email user-top-read';
+const scope = 'user-read-private user-read-email user-top-read user-read-recently-played playlist-read-private';
 
 export async function GET() {
   const queryParams = new URLSearchParams({
