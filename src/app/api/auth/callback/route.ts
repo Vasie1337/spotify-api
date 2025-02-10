@@ -13,8 +13,6 @@ export async function GET(request: NextRequest) {
   try {
     const tokens = await getAccessToken(code);
     
-    // In a real app, you'd want to store these tokens securely
-    // For this example, we'll use cookies
     const response = NextResponse.redirect(`${origin}/dashboard`);
     response.cookies.set('spotify_access_token', tokens.access_token, {
       httpOnly: true,
