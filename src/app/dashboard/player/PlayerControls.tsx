@@ -30,15 +30,45 @@ export default function PlayerControls({
   const [shuffleState, setShuffleState] = useState(initialShuffleState);
   const [repeatState, setRepeatState] = useState(initialRepeatState);
 
+  // Update local state when props change
+  useEffect(() => {
+    setIsPlaying(initialIsPlaying);
+    setProgress(initialProgress);
+    setShuffleState(initialShuffleState);
+    setRepeatState(initialRepeatState);
+  }, [initialIsPlaying, initialProgress, initialShuffleState, initialRepeatState]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying) {
       interval = setInterval(() => {
-        setProgress(prev => Math.min(prev + 1000, duration));
+        setProgress(prev => {
+          if (prev >= duration) {
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + 1000;
+        });
       }, 1000);
     }
     return () => clearInterval(interval);
   }, [isPlaying, duration]);
+
+  // Add function to refresh playback state
+  const refreshPlaybackState = async () => {
+    try {
+      const response = await fetch('/api/player/state');
+      if (response.ok) {
+        const data = await response.json();
+        setIsPlaying(data.is_playing);
+        setProgress(data.progress_ms);
+        setShuffleState(data.shuffle_state);
+        setRepeatState(data.repeat_state);
+      }
+    } catch (error) {
+      console.error('Error refreshing playback state:', error);
+    }
+  };
 
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
@@ -47,12 +77,55 @@ export default function PlayerControls({
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const handlePlayPause = async () => {
+  const handleControl = async (action: string) => {
     try {
-      const action = isPlaying ? 'pause' : 'play';
-      const response = await fetch(`/api/player/${action}`, { method: 'POST' });
+      let options = {};
+      
+      // Set specific options for each action
+      switch (action) {
+        case 'shuffle':
+          options = { state: !shuffleState };
+          break;
+        case 'repeat':
+          const states = ['off', 'track', 'context'];
+          const nextState = states[(states.indexOf(repeatState) + 1) % states.length];
+          options = { state: nextState };
+          break;
+      }
+
+      const response = await fetch(`/api/player/${action}`, { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(options),
+      });
+
       if (response.ok) {
-        setIsPlaying(!isPlaying);
+        // For actions that change the track, trigger a full refresh
+        if (['next', 'previous'].includes(action)) {
+          window.location.reload();
+        } else {
+          // Optimistically update UI for other actions
+          switch (action) {
+            case 'play':
+              setIsPlaying(true);
+              break;
+            case 'pause':
+              setIsPlaying(false);
+              break;
+            case 'shuffle':
+              setShuffleState(!shuffleState);
+              break;
+            case 'repeat':
+              const states: ('off' | 'track' | 'context')[] = ['off', 'track', 'context'];
+              const currentIndex = states.indexOf(repeatState);
+              setRepeatState(states[(currentIndex + 1) % states.length]);
+              break;
+          }
+        }
+      } else {
+        console.error('Failed to control playback:', await response.json());
       }
     } catch (error) {
       console.error('Error controlling playback:', error);
@@ -81,31 +154,33 @@ export default function PlayerControls({
           className={`p-2 rounded-full hover:bg-white/10 ${
             shuffleState ? 'text-green-500' : 'text-white'
           }`}
-          onClick={() => setShuffleState(!shuffleState)}
+          onClick={() => handleControl('shuffle')}
         >
           <Shuffle size={20} />
         </button>
-        <button className="p-2 rounded-full hover:bg-white/10">
+        <button 
+          className="p-2 rounded-full hover:bg-white/10"
+          onClick={() => handleControl('previous')}
+        >
           <SkipBack size={24} />
         </button>
         <button 
           className="p-4 rounded-full bg-white text-black hover:scale-105 transition"
-          onClick={handlePlayPause}
+          onClick={() => handleControl(isPlaying ? 'pause' : 'play')}
         >
           {isPlaying ? <Pause size={24} /> : <Play size={24} />}
         </button>
-        <button className="p-2 rounded-full hover:bg-white/10">
+        <button 
+          className="p-2 rounded-full hover:bg-white/10"
+          onClick={() => handleControl('next')}
+        >
           <SkipForward size={24} />
         </button>
         <button 
           className={`p-2 rounded-full hover:bg-white/10 ${
             repeatState !== 'off' ? 'text-green-500' : 'text-white'
           }`}
-          onClick={() => {
-            const states: ('off' | 'track' | 'context')[] = ['off', 'track', 'context'];
-            const currentIndex = states.indexOf(repeatState);
-            setRepeatState(states[(currentIndex + 1) % states.length]);
-          }}
+          onClick={() => handleControl('repeat')}
         >
           <Repeat size={20} />
         </button>

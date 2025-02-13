@@ -5,6 +5,9 @@ import Image from 'next/image';
 import type { SpotifyPlaybackState } from '@/types/spotify';
 import PlayerControls from './PlayerControls';
 
+// Add revalidation to ensure fresh data
+export const revalidate = 0;
+
 async function getPlaybackState() {
   const cookieStore = await cookies();
   const access_token = cookieStore.get('spotify_access_token');
@@ -47,6 +50,7 @@ export default async function PlayerPage() {
             alt={track.name}
             fill
             className="rounded-lg object-cover"
+            priority
           />
         </div>
         

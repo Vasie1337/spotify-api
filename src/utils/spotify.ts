@@ -133,7 +133,13 @@ export async function getCurrentPlayback(access_token: string) {
   );
   
   if (response.status === 204) {
-    return null; // No active playback
+    return null;
+  }
+  
+  if (!response.ok) {
+    const error = await response.json();
+    console.error('Playback state error:', error);
+    throw new Error(`Failed to fetch playback state: ${error.error.message}`);
   }
   
   return response.json();
@@ -147,18 +153,42 @@ export async function controlPlayback(access_token: string, action: string, opti
     previous: '/me/player/previous',
     shuffle: '/me/player/shuffle',
     repeat: '/me/player/repeat',
+    seek: '/me/player/seek',
   };
 
-  const response = await fetch(
-    `${SPOTIFY_API_BASE}${endpoints[action as keyof typeof endpoints]}`,
-    {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-      ...(options && { body: JSON.stringify(options) }),
-    }
-  );
+  // Handle special cases for shuffle and repeat which require state in URL
+  let url = `${SPOTIFY_API_BASE}${endpoints[action as keyof typeof endpoints]}`;
+  if (action === 'shuffle') {
+    url += `?state=${options?.state ?? 'true'}`;
+  } else if (action === 'repeat') {
+    url += `?state=${options?.state ?? 'track'}`;
+  } else if (action === 'seek') {
+    url += `?position_ms=${options?.position_ms ?? 0}`;
+  }
+
+  // Some endpoints use POST, others use PUT
+  const method = ['next', 'previous'].includes(action) ? 'POST' : 'PUT';
+
+  const response = await fetch(url, {
+    method,
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      'Content-Type': 'application/json',
+    },
+    ...(action === 'play' && options?.context_uri && {
+      body: JSON.stringify({
+        context_uri: options.context_uri,
+        offset: options.offset,
+        position_ms: options.position_ms,
+      }),
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    console.error('Playback control error:', error);
+    throw new Error(`Failed to control playback: ${error.error?.message}`);
+  }
 
   return response.status;
 } 

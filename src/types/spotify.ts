@@ -28,6 +28,7 @@ export interface SpotifyTrack {
   external_urls: {
     spotify: string;
   };
+  duration_ms: number;
 }
 
 export interface SpotifyProfile {
@@ -70,4 +71,4 @@ export interface SpotifyPlaybackState {
   };
   shuffle_state: boolean;
   repeat_state: 'off' | 'track' | 'context';
-} 
+}
