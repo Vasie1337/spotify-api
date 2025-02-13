@@ -75,21 +75,23 @@ export default function PlayerControls({
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const handleControl = async (action: string) => {
-    try {
-      let options = {};
-      
-      switch (action) {
-        case 'shuffle':
-          options = { state: !shuffleState };
-          break;
-        case 'repeat':
-          const states = ['off', 'track', 'context'];
-          const nextState = states[(states.indexOf(repeatState) + 1) % states.length];
-          options = { state: nextState };
-          break;
-      }
+  const handleSeek = async (e: React.MouseEvent<HTMLDivElement>) => {
+    const progressBar = e.currentTarget;
+    const rect = progressBar.getBoundingClientRect();
+    const clickPosition = e.clientX - rect.left;
+    const percentage = clickPosition / rect.width;
+    const newPosition = Math.floor(duration * percentage);
 
+    try {
+      await handleControl('seek', { position_ms: newPosition });
+      setProgress(newPosition);
+    } catch (error) {
+      console.error('Error seeking:', error);
+    }
+  };
+
+  const handleControl = async (action: string, options: any = {}) => {
+    try {
       const response = await fetch(`/api/player/${action}`, { 
         method: 'POST',
         headers: {
@@ -114,6 +116,9 @@ export default function PlayerControls({
             const currentIndex = states.indexOf(repeatState);
             setRepeatState(states[(currentIndex + 1) % states.length]);
             break;
+          case 'seek':
+            setProgress(options.position_ms);
+            break;
         }
 
         setTimeout(refreshPlaybackState, 500);
@@ -133,9 +138,12 @@ export default function PlayerControls({
 
   return (
     <div className="w-full">
-      {/* Progress bar */}
+      {/* Progress bar - updated with onClick handler and cursor style */}
       <div className="mb-6">
-        <div className="h-1.5 bg-white/[0.07] rounded-full overflow-hidden">
+        <div 
+          className="h-1.5 bg-white/[0.07] rounded-full overflow-hidden cursor-pointer"
+          onClick={handleSeek}
+        >
           <div 
             className="h-full bg-[#1DB954] rounded-full transition-all duration-100"
             style={{ width: `${(progress / duration) * 100}%` }}
