@@ -168,74 +168,51 @@ interface DashboardData {
 export default async function Dashboard() {
   const { 
     profile, 
-    topTracks, 
-    topArtists,
-    recentlyPlayed,
+    playlists,
     topTracksAllTime,
     topArtistsAllTime,
-    playlists
+    recentlyPlayed
   } = await getData();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-[#1DB954]/5 to-black">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Profile Section */}
-        <div className="flex flex-col sm:flex-row items-center gap-6 mb-12">
-          {profile.images?.[0] && (
-            <Image
-              src={profile.images[0].url}
-              alt={profile.display_name}
-              width={128}
-              height={128}
-              className="rounded-full"
+    <>
+      {/* Profile Section */}
+      <div className="flex flex-col sm:flex-row items-center gap-6 mb-12">
+        {profile.images?.[0] && (
+          <Image
+            src={profile.images[0].url}
+            alt={profile.display_name}
+            width={128}
+            height={128}
+            className="rounded-full"
+          />
+        )}
+        <div className="text-center sm:text-left">
+          <h1 className="text-4xl font-bold mb-2">{profile.display_name}</h1>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <StatCard title="Followers" value={profile.followers.total} />
+            <StatCard title="Playlists" value={playlists.total} />
+            <StatCard 
+              title="Top Genre" 
+              value={topArtistsAllTime.items[0]?.genres[0] || 'N/A'} 
             />
-          )}
-          <div className="text-center sm:text-left">
-            <h1 className="text-4xl font-bold mb-2">{profile.display_name}</h1>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-              <StatCard title="Followers" value={profile.followers.total} />
-              <StatCard title="Playlists" value={playlists.total} />
-              <StatCard 
-                title="Top Genre" 
-                value={topArtistsAllTime.items[0]?.genres[0] || 'N/A'} 
-              />
-              <StatCard 
-                title="Top Artist" 
-                value={topArtistsAllTime.items[0]?.name || 'N/A'} 
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <TrackList 
-            tracks={topTracks.items} 
-            title="Top Tracks (Last 4 Weeks)"
-            listType="recent-top"
-          />
-          <TrackList 
-            tracks={topTracksAllTime.items} 
-            title="Top Tracks (All Time)"
-            listType="all-time-top"
-          />
-          <TrackList 
-            tracks={recentlyPlayed.items} 
-            title="Recently Played"
-            listType="recently-played"
-          />
-          <div className="space-y-6">
-            <ArtistGrid 
-              artists={topArtists.items} 
-              title="Top Artists (Last 4 Weeks)" 
-            />
-            <ArtistGrid 
-              artists={topArtistsAllTime.items} 
-              title="Top Artists (All Time)" 
+            <StatCard 
+              title="Top Artist" 
+              value={topArtistsAllTime.items[0]?.name || 'N/A'} 
             />
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Recent Activity */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
+        <TrackList 
+          tracks={recentlyPlayed.items} 
+          title="Recently Played"
+          listType="recently-played"
+        />
+      </div>
+    </>
   );
 } 

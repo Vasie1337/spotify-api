@@ -56,4 +56,18 @@ export interface RecentlyPlayedTrack {
 export interface SpotifyResponse<T> {
   items: T[];
   total: number;
+}
+
+export interface SpotifyPlaybackState {
+  is_playing: boolean;
+  item: SpotifyTrack;
+  progress_ms: number;
+  device: {
+    id: string;
+    name: string;
+    type: string;
+    volume_percent: number;
+  };
+  shuffle_state: boolean;
+  repeat_state: 'off' | 'track' | 'context';
 } 

@@ -120,4 +120,45 @@ export async function getUserPlaylists(access_token: string) {
     }
   );
   return response.json();
+}
+
+export async function getCurrentPlayback(access_token: string) {
+  const response = await fetch(
+    `${SPOTIFY_API_BASE}/me/player`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
+  );
+  
+  if (response.status === 204) {
+    return null; // No active playback
+  }
+  
+  return response.json();
+}
+
+export async function controlPlayback(access_token: string, action: string, options?: any) {
+  const endpoints = {
+    play: '/me/player/play',
+    pause: '/me/player/pause',
+    next: '/me/player/next',
+    previous: '/me/player/previous',
+    shuffle: '/me/player/shuffle',
+    repeat: '/me/player/repeat',
+  };
+
+  const response = await fetch(
+    `${SPOTIFY_API_BASE}${endpoints[action as keyof typeof endpoints]}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+      ...(options && { body: JSON.stringify(options) }),
+    }
+  );
+
+  return response.status;
 } 
