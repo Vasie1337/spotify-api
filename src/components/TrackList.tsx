@@ -9,8 +9,8 @@ interface TrackListProps {
 
 export function TrackList({ tracks, title, listType }: TrackListProps) {
   return (
-    <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 hover:bg-white/[0.07] transition-colors">
-      <h2 className="text-xl font-bold mb-4">{title}</h2>
+    <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-6 hover:bg-white/[0.04] transition-all duration-300 border border-white/[0.05]">
+      <h2 className="text-2xl font-bold mb-6 text-white/90">{title}</h2>
       <div className="space-y-2">
         {tracks.map((item, index) => {
           const track = 'track' in item ? item.track : item;
@@ -22,20 +22,24 @@ export function TrackList({ tracks, title, listType }: TrackListProps) {
               href={track.external_urls.spotify}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all hover:translate-x-1"
+              className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/[0.07] transition-all duration-300 group"
             >
-              <span className="text-gray-400 w-6 text-sm font-medium">{index + 1}</span>
-              <div className="relative w-12 h-12 flex-shrink-0">
+              <span className="text-gray-400 w-6 text-sm font-medium group-hover:text-[#1DB954] transition-colors">
+                {index + 1}
+              </span>
+              <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden shadow-md">
                 <Image
                   src={track.album.images[0].url}
                   alt={track.name}
                   fill
-                  className="rounded object-cover"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-medium truncate">{track.name}</p>
-                <p className="text-sm text-gray-400 truncate">
+                <p className="font-medium truncate group-hover:text-[#1DB954] transition-colors">
+                  {track.name}
+                </p>
+                <p className="text-sm text-gray-400 truncate mt-1 group-hover:text-gray-300 transition-colors">
                   {track.artists.map(artist => artist.name).join(', ')}
                 </p>
               </div>

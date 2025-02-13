@@ -30,14 +30,6 @@ export default function PlayerControls({
   const [shuffleState, setShuffleState] = useState(initialShuffleState);
   const [repeatState, setRepeatState] = useState(initialRepeatState);
 
-  // Update local state when props change
-  useEffect(() => {
-    setIsPlaying(initialIsPlaying);
-    setProgress(initialProgress);
-    setShuffleState(initialShuffleState);
-    setRepeatState(initialRepeatState);
-  }, [initialIsPlaying, initialProgress, initialShuffleState, initialRepeatState]);
-
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying) {
@@ -54,7 +46,13 @@ export default function PlayerControls({
     return () => clearInterval(interval);
   }, [isPlaying, duration]);
 
-  // Add function to refresh playback state
+  useEffect(() => {
+    setIsPlaying(initialIsPlaying);
+    setProgress(initialProgress);
+    setShuffleState(initialShuffleState);
+    setRepeatState(initialRepeatState);
+  }, [initialIsPlaying, initialProgress, initialShuffleState, initialRepeatState]);
+
   const refreshPlaybackState = async () => {
     try {
       const response = await fetch('/api/player/state');
@@ -81,7 +79,6 @@ export default function PlayerControls({
     try {
       let options = {};
       
-      // Set specific options for each action
       switch (action) {
         case 'shuffle':
           options = { state: !shuffleState };
@@ -102,7 +99,6 @@ export default function PlayerControls({
       });
 
       if (response.ok) {
-        // Update local state first
         switch (action) {
           case 'play':
             setIsPlaying(true);
@@ -120,7 +116,6 @@ export default function PlayerControls({
             break;
         }
 
-        // Then refresh the playback state after a short delay
         setTimeout(refreshPlaybackState, 500);
       } else {
         const errorData = await response.json();
@@ -139,50 +134,50 @@ export default function PlayerControls({
   return (
     <div className="w-full">
       {/* Progress bar */}
-      <div className="mb-4">
-        <div className="h-1 bg-white/10 rounded-full">
+      <div className="mb-6">
+        <div className="h-1.5 bg-white/[0.07] rounded-full overflow-hidden">
           <div 
-            className="h-1 bg-white rounded-full transition-all duration-100"
+            className="h-full bg-[#1DB954] rounded-full transition-all duration-100"
             style={{ width: `${(progress / duration) * 100}%` }}
           />
         </div>
-        <div className="flex justify-between text-sm text-gray-400 mt-1">
+        <div className="flex justify-between text-sm text-gray-400 mt-2">
           <span>{formatTime(progress)}</span>
           <span>{formatTime(duration)}</span>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-6">
         <button 
-          className={`p-2 rounded-full hover:bg-white/10 ${
-            shuffleState ? 'text-green-500' : 'text-white'
+          className={`p-2.5 rounded-full hover:bg-white/[0.07] transition-all duration-300 ${
+            shuffleState ? 'text-[#1DB954]' : 'text-white/80'
           }`}
           onClick={() => handleControl('shuffle')}
         >
           <Shuffle size={20} />
         </button>
         <button 
-          className="p-2 rounded-full hover:bg-white/10"
+          className="p-2.5 rounded-full hover:bg-white/[0.07] transition-all duration-300 text-white/80"
           onClick={() => handleControl('previous')}
         >
           <SkipBack size={24} />
         </button>
         <button 
-          className="p-4 rounded-full bg-white text-black hover:scale-105 transition"
+          className="p-5 rounded-full bg-[#1DB954] text-black hover:scale-105 hover:brightness-110 transition-all duration-300 shadow-lg"
           onClick={() => handleControl(isPlaying ? 'pause' : 'play')}
         >
           {isPlaying ? <Pause size={24} /> : <Play size={24} />}
         </button>
         <button 
-          className="p-2 rounded-full hover:bg-white/10"
+          className="p-2.5 rounded-full hover:bg-white/[0.07] transition-all duration-300 text-white/80"
           onClick={() => handleControl('next')}
         >
           <SkipForward size={24} />
         </button>
         <button 
-          className={`p-2 rounded-full hover:bg-white/10 ${
-            repeatState !== 'off' ? 'text-green-500' : 'text-white'
+          className={`p-2.5 rounded-full hover:bg-white/[0.07] transition-all duration-300 ${
+            repeatState !== 'off' ? 'text-[#1DB954]' : 'text-white/80'
           }`}
           onClick={() => handleControl('repeat')}
         >

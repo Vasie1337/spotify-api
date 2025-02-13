@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { TrackList } from '@/components/TrackList';
 import { TimeRangeSwitch } from '@/components/TimeRangeSwitch';
+import { PageWrapper } from '@/components/PageWrapper';
 import type { SpotifyTrack, SpotifyResponse } from '@/types/spotify';
 
 interface TracksContentProps {
@@ -15,17 +16,19 @@ export function TracksContent({ initialShortTerm, initialLongTerm }: TracksConte
   const tracks = timeRange === 'short_term' ? initialShortTerm : initialLongTerm;
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Your Top Tracks</h1>
-        <TimeRangeSwitch timeRange={timeRange} onChange={setTimeRange} />
+    <PageWrapper>
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Your Top Tracks</h1>
+          <TimeRangeSwitch timeRange={timeRange} onChange={setTimeRange} />
+        </div>
+        
+        <TrackList 
+          tracks={tracks.items} 
+          title={timeRange === 'short_term' ? 'Last 4 Weeks' : 'All Time'}
+          listType={timeRange}
+        />
       </div>
-      
-      <TrackList 
-        tracks={tracks.items} 
-        title={timeRange === 'short_term' ? 'Last 4 Weeks' : 'All Time'}
-        listType={timeRange}
-      />
-    </div>
+    </PageWrapper>
   );
 } 

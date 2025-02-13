@@ -35,7 +35,7 @@ export default function AutoRefreshPlayer({ initialPlaybackState }: { initialPla
   if (!playbackState || !playbackState.item) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <h1 className="text-2xl font-bold mb-4">No Active Playback</h1>
+        <h1 className="text-2xl font-bold mb-4 text-white/90">No Active Playback</h1>
         <p className="text-gray-400">
           Start playing something on Spotify to see it here
         </p>
@@ -47,23 +47,24 @@ export default function AutoRefreshPlayer({ initialPlaybackState }: { initialPla
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6">
-        <div className="aspect-square relative mb-6 max-w-md mx-auto">
+      <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-8 border border-white/[0.05] shadow-lg">
+        <div className="aspect-square relative mb-8 max-w-md mx-auto group">
           <Image
             src={track.album.images[0].url}
             alt={track.name}
             fill
-            className="rounded-lg object-cover"
+            className="rounded-2xl object-cover shadow-2xl group-hover:scale-[1.02] transition-transform duration-500"
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 rounded-2xl" />
         </div>
         
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold mb-2">{track.name}</h1>
-          <p className="text-gray-400">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold mb-3 text-white/90">{track.name}</h1>
+          <p className="text-lg text-[#1DB954] font-medium">
             {track.artists.map(artist => artist.name).join(', ')}
           </p>
-          <p className="text-sm text-gray-500 mt-1">{track.album.name}</p>
+          <p className="text-sm text-gray-400 mt-2">{track.album.name}</p>
         </div>
 
         <PlayerControls 
