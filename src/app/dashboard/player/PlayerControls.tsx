@@ -102,33 +102,37 @@ export default function PlayerControls({
       });
 
       if (response.ok) {
-        // For actions that change the track, trigger a full refresh
-        if (['next', 'previous'].includes(action)) {
-          window.location.reload();
-        } else {
-          // Optimistically update UI for other actions
-          switch (action) {
-            case 'play':
-              setIsPlaying(true);
-              break;
-            case 'pause':
-              setIsPlaying(false);
-              break;
-            case 'shuffle':
-              setShuffleState(!shuffleState);
-              break;
-            case 'repeat':
-              const states: ('off' | 'track' | 'context')[] = ['off', 'track', 'context'];
-              const currentIndex = states.indexOf(repeatState);
-              setRepeatState(states[(currentIndex + 1) % states.length]);
-              break;
-          }
+        // Update local state first
+        switch (action) {
+          case 'play':
+            setIsPlaying(true);
+            break;
+          case 'pause':
+            setIsPlaying(false);
+            break;
+          case 'shuffle':
+            setShuffleState(!shuffleState);
+            break;
+          case 'repeat':
+            const states: ('off' | 'track' | 'context')[] = ['off', 'track', 'context'];
+            const currentIndex = states.indexOf(repeatState);
+            setRepeatState(states[(currentIndex + 1) % states.length]);
+            break;
         }
+
+        // Then refresh the playback state after a short delay
+        setTimeout(refreshPlaybackState, 500);
       } else {
-        console.error('Failed to control playback:', await response.json());
+        const errorData = await response.json();
+        if (response.status === 403) {
+          alert('Please make sure Spotify is active and playing on a device');
+        } else {
+          console.error('Failed to control playback:', errorData);
+        }
       }
     } catch (error) {
       console.error('Error controlling playback:', error);
+      alert('Failed to control playback. Please check if Spotify is active.');
     }
   };
 

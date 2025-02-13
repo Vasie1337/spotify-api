@@ -166,6 +166,17 @@ export async function controlPlayback(access_token: string, action: string, opti
     url += `?position_ms=${options?.position_ms ?? 0}`;
   }
 
+  // Check for active device first
+  const deviceCheck = await fetch(`${SPOTIFY_API_BASE}/me/player`, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+
+  if (deviceCheck.status === 204) {
+    throw new Error('NO_ACTIVE_DEVICE');
+  }
+
   // Some endpoints use POST, others use PUT
   const method = ['next', 'previous'].includes(action) ? 'POST' : 'PUT';
 
@@ -186,8 +197,10 @@ export async function controlPlayback(access_token: string, action: string, opti
 
   if (!response.ok) {
     const error = await response.json();
-    console.error('Playback control error:', error);
-    throw new Error(`Failed to control playback: ${error.error?.message}`);
+    if (response.status === 403) {
+      throw new Error('NO_ACTIVE_DEVICE');
+    }
+    throw new Error(error.error?.message || 'Failed to control playback');
   }
 
   return response.status;
