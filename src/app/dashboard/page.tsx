@@ -23,37 +23,46 @@ async function getData(): Promise<DashboardData> {
   const cookieStore = await cookies();
   const access_token = cookieStore.get('spotify_access_token');
 
-  if (!access_token) {
+  if (!access_token?.value) {
     redirect('/');
   }
 
-  const [
-    profile, 
-    topTracks, 
-    topArtists,
-    recentlyPlayed,
-    topTracksAllTime,
-    topArtistsAllTime,
-    playlists
-  ] = await Promise.all([
-    getUserProfile(access_token.value),
-    getTopTracks(access_token.value),
-    getTopArtists(access_token.value),
-    getRecentlyPlayed(access_token.value),
-    getTopTracksAllTime(access_token.value),
-    getTopArtistsAllTime(access_token.value),
-    getUserPlaylists(access_token.value)
-  ]);
+  try {
+    const [
+      profile, 
+      topTracks, 
+      topArtists,
+      recentlyPlayed,
+      topTracksAllTime,
+      topArtistsAllTime,
+      playlists
+    ] = await Promise.all([
+      getUserProfile(access_token.value),
+      getTopTracks(access_token.value),
+      getTopArtists(access_token.value),
+      getRecentlyPlayed(access_token.value),
+      getTopTracksAllTime(access_token.value),
+      getTopArtistsAllTime(access_token.value),
+      getUserPlaylists(access_token.value)
+    ]);
 
-  return { 
-    profile, 
-    topTracks, 
-    topArtists,
-    recentlyPlayed,
-    topTracksAllTime,
-    topArtistsAllTime,
-    playlists
-  };
+    if (!profile || !topTracks || !topArtists) {
+      redirect('/');
+    }
+
+    return { 
+      profile, 
+      topTracks, 
+      topArtists,
+      recentlyPlayed,
+      topTracksAllTime,
+      topArtistsAllTime,
+      playlists
+    };
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    redirect('/'); // Redirect to home instead of error page
+  }
 }
 
 function StatCard({ title, value }: { title: string; value: string | number }) {
